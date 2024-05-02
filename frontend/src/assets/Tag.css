@@ -1,0 +1,16 @@
+.input-container {
+    display: flex;
+    padding: 1rem;
+  }
+  
+  .create-option .material-icons-outlined {
+    color: #5846f6;
+    vertical-align: text-bottom;
+    font-size: 18px;
+  }
+  
+  .all-variants {
+    display: flex;
+    flex-direction: column;
+  }
+  
