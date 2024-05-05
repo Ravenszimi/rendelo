@@ -6,7 +6,16 @@
   - Nyisson meg egy terminált
   - Navigáljon a frontend mappába
   - Futtassa az alábbi parancsokat
-  - > npm i
+    ```console
+        frontend: ~$ npm i
+        frontend: ~$ npm run dev
+    ```
   - > npm run dev
-- Backend indítása: npm start
+- Backend indítása:
+  - Nyisson meg egy terminált
+  - Navigáljon a backend mappába
+  - Futtassa az alábbi parancsot:
+    ```console
+        backend: ~$ npm start
+    ```
 
