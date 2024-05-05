@@ -10,7 +10,6 @@
         frontend: ~$ npm i
         frontend: ~$ npm run dev
     ```
-  - > npm run dev
 - Backend indítása:
   - Nyisson meg egy terminált
   - Navigáljon a backend mappába
