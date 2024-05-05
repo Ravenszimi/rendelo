@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2024. Ápr 08. 21:12
+-- Létrehozás ideje: 2024. Máj 05. 12:18
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Adatbázis: `rendelo`
 --
+CREATE DATABASE IF NOT EXISTS `rendelo` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci;
+USE `rendelo`;
 
 -- --------------------------------------------------------
 
@@ -27,6 +29,7 @@ SET time_zone = "+00:00";
 -- Tábla szerkezet ehhez a táblához `allatok`
 --
 
+DROP TABLE IF EXISTS `allatok`;
 CREATE TABLE `allatok` (
   `id` int(11) NOT NULL,
   `gda_id` int(11) NOT NULL,
@@ -36,20 +39,20 @@ CREATE TABLE `allatok` (
   `nem` varchar(255) NOT NULL,
   `kor` varchar(255) NOT NULL,
   `utolsovizsgalat` date DEFAULT NULL,
-  `megjegyzes` varchar(255) DEFAULT NULL
+  `megjegyzes` varchar(255) DEFAULT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'aktiv'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
 -- A tábla adatainak kiíratása `allatok`
 --
 
-INSERT INTO `allatok` (`id`, `gda_id`, `nev`, `faj`, `kg`, `nem`, `kor`, `utolsovizsgalat`, `megjegyzes`) VALUES
-(1, 2, 'Lucy', 'macska', 3, 'nőstény', '2 év', '2023-01-03', NULL),
-(2, 1, 'Ubul', 'kutya', 5, 'hím', '6 év', '2024-01-01', 'Harapós'),
-(3, 3, 'Kormi', 'macska', 5, 'hím', '5 év', '2023-05-16', NULL),
-(4, 4, 'Maja', 'kutya', 2, 'nőstény', '1 év', '2023-05-10', 'Epilepszia'),
-(5, 5, 'Picur', 'nyúl', 1, 'nőstény', '8 hónap', '2023-08-04', NULL),
-(6, 3, 'Foltos', 'kutya', 6, 'hím', '3 év', '2023-10-15', NULL);
+INSERT INTO `allatok` (`id`, `gda_id`, `nev`, `faj`, `kg`, `nem`, `kor`, `utolsovizsgalat`, `megjegyzes`, `status`) VALUES
+(1, 2, 'Kutya', 'Cica', 45, 'Hím', '2', '2020-12-12', 'Jó kutzya', 'aktiv'),
+(2, 1, 'Ubul', 'kutya', 5, 'hím', '6 év', '2024-01-01', 'Harapós', 'aktiv'),
+(3, 3, 'Kormi', 'macska', 5, 'hím', '5 év', '2023-05-16', NULL, 'aktiv'),
+(4, 4, 'Maja', 'kutya', 2, 'nőstény', '1 év', '2023-05-10', 'Epilepszia', 'aktiv'),
+(5, 5, 'Picur', 'nyúl', 1, 'nőstény', '8 hónap', '2023-08-04', NULL, 'aktiv');
 
 -- --------------------------------------------------------
 
@@ -57,6 +60,7 @@ INSERT INTO `allatok` (`id`, `gda_id`, `nev`, `faj`, `kg`, `nem`, `kor`, `utolso
 -- Tábla szerkezet ehhez a táblához `arak`
 --
 
+DROP TABLE IF EXISTS `arak`;
 CREATE TABLE `arak` (
   `id` int(11) NOT NULL,
   `kzs_id` int(11) NOT NULL,
@@ -127,6 +131,7 @@ INSERT INTO `arak` (`id`, `kzs_id`, `ar`, `kezdetidatum`, `vegdatum`) VALUES
 -- Tábla szerkezet ehhez a táblához `felirt_kezelesek`
 --
 
+DROP TABLE IF EXISTS `felirt_kezelesek`;
 CREATE TABLE `felirt_kezelesek` (
   `vgt_id` int(11) NOT NULL,
   `kzs_id` int(11) NOT NULL,
@@ -142,9 +147,7 @@ INSERT INTO `felirt_kezelesek` (`vgt_id`, `kzs_id`, `datum`) VALUES
 (2, 2, '2024-01-26'),
 (3, 3, '2024-01-26'),
 (3, 4, '2024-01-26'),
-(4, 21, '2024-01-30'),
-(5, 44, '2024-02-02'),
-(6, 16, '2024-02-02');
+(4, 21, '2024-01-30');
 
 -- --------------------------------------------------------
 
@@ -152,6 +155,7 @@ INSERT INTO `felirt_kezelesek` (`vgt_id`, `kzs_id`, `datum`) VALUES
 -- Tábla szerkezet ehhez a táblához `gazdak`
 --
 
+DROP TABLE IF EXISTS `gazdak`;
 CREATE TABLE `gazdak` (
   `id` int(11) NOT NULL,
   `nev` varchar(255) NOT NULL,
@@ -162,20 +166,22 @@ CREATE TABLE `gazdak` (
   `teruletnev` varchar(255) NOT NULL,
   `terulettipus` varchar(255) NOT NULL,
   `hazszam` int(10) NOT NULL,
-  `adoszam` varchar(255) DEFAULT NULL
+  `adoszam` varchar(255) DEFAULT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'aktiv'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
 -- A tábla adatainak kiíratása `gazdak`
 --
 
-INSERT INTO `gazdak` (`id`, `nev`, `telefonszam`, `email`, `iranyitoszam`, `helysegnev`, `teruletnev`, `terulettipus`, `hazszam`, `adoszam`) VALUES
-(1, 'Kerekes József', '36702349546', 'kerekesjozsef6231@gmail.com', 5650, 'Mezőberény', 'József Attila', 'utca', 34, '84732985671'),
-(2, 'Nagy Judit', '36207643987', 'nagyjudit6453@gmail.com', 5600, 'Békéscsaba', 'Kossuth Lajos', 'utca', 2, '84521073926'),
-(3, 'Kovács Anna', '36307642341', 'kovacsanna34@gmail.com', 5630, 'Békés', 'Csabai', 'út', 50, '84765298101'),
-(4, 'Zsombok Anikó', '36301230876', 'zsombokaniko2310@gmail.com', 5630, 'Békés', 'Gárdonyi Géza', 'utca', 80, '81260490103'),
-(5, 'Kovács Péter', '36202309821', 'kovacs.peter98@gmail.com', 5600, 'Békéscsaba', 'Jácint', 'sor', 56, '86517012801'),
-(6, 'Kiss Béla ', '062053528786', 'tibike@gmail.com', 5600, 'Békéscsaba', 'Ligeti', 'Város', 7, '3216548');
+INSERT INTO `gazdak` (`id`, `nev`, `telefonszam`, `email`, `iranyitoszam`, `helysegnev`, `teruletnev`, `terulettipus`, `hazszam`, `adoszam`, `status`) VALUES
+(1, 'Belacskam', '65432132', 'gyurika@gyurika.hu', 5600, 'Csaba', 'utca', 'Varos', 5600, '6543213215', 'aktiv'),
+(2, 'Nagy Juditka', '36207643987', 'nagyjudit6453@gmail.com', 5600, 'Békéscsaba', 'Kossuth Lajos', 'utca', 2, '84521073926', 'aktiv'),
+(3, 'Kovácsiuhguh', '36307642341', 'kovacsanna34@gmail.com', 5630, 'Békés', 'Csabai', 'út', 50, '84765298101', 'aktiv'),
+(4, 'Zsombok Anikócsak', '36301230876', 'zsombokaniko2310@gmail.com', 5630, 'Békés', 'Gárdonyi Géza', 'utca', 80, '81260490103', 'aktiv'),
+(5, 'Kovács Péter', '36202309821', 'kovacs.peter98@gmail.com', 5600, 'Békéscsaba', 'Jácint', 'sor', 56, '86517012801', 'aktiv'),
+(6, 'Kiss Béla ', '062053528786', 'tibike@gmail.com', 5600, 'Békéscsaba', 'Ligeti', 'Város', 7, '3216548', 'aktiv'),
+(30, 'Kiss Mihály', '0632216541', 'jasjdoasijdpasojpao', 5600, 'Békéscsaba', 'guasdhu', 'oiahsdoiashd', 45, '524561321', 'aktiv');
 
 -- --------------------------------------------------------
 
@@ -183,6 +189,7 @@ INSERT INTO `gazdak` (`id`, `nev`, `telefonszam`, `email`, `iranyitoszam`, `hely
 -- Tábla szerkezet ehhez a táblához `kezelesek`
 --
 
+DROP TABLE IF EXISTS `kezelesek`;
 CREATE TABLE `kezelesek` (
   `id` int(11) NOT NULL,
   `nev` varchar(255) NOT NULL
@@ -250,6 +257,7 @@ INSERT INTO `kezelesek` (`id`, `nev`) VALUES
 -- Tábla szerkezet ehhez a táblához `orvosok`
 --
 
+DROP TABLE IF EXISTS `orvosok`;
 CREATE TABLE `orvosok` (
   `id` int(11) NOT NULL,
   `nev` varchar(255) NOT NULL,
@@ -263,19 +271,20 @@ CREATE TABLE `orvosok` (
   `adoszam` varchar(255) NOT NULL,
   `azonositoszam` varchar(255) NOT NULL,
   `felhasznalonev` varchar(255) NOT NULL,
-  `jelszo` varchar(255) NOT NULL
+  `jelszo` varchar(255) NOT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'aktiv'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
 -- A tábla adatainak kiíratása `orvosok`
 --
 
-INSERT INTO `orvosok` (`id`, `nev`, `telefonszam`, `email`, `iranyitoszam`, `helysegnev`, `teruletnev`, `terulettipus`, `hazszam`, `adoszam`, `azonositoszam`, `felhasznalonev`, `jelszo`) VALUES
-(1, 'Dr. Kiss Péter', '36703458762', 'drkisspeter3452@gmail.com', 5600, 'Békéscsaba', 'Szőlő', 'utca', 2, '87629818720', '73543', 'drkisspeter', '7tHifiTV'),
-(2, 'Dr. Szabó Andrea', '36703458762', 'drszaboandrea12@gmail.com', 5600, 'Békéscsaba', 'Berényi', 'út', 45, '84532789411', '65343', 'drszaboandrea', 'LmHc5Ma'),
-(3, 'Dr. Kutasi Kitti', '36206239852', 'drkutasikitti55@gmail.com', 5600, 'Békéscsaba', 'Ady Endre', 'utca', 10, '82613452910', '74356', 'drkutasikitti', 'MY8CWcxg'),
-(4, 'Dr. Kőszegi Dóra', '36703248567', 'drkoszegidora2310@gmail.com', 5600, 'Békéscsaba', 'Kölcsey Ferenc', 'utca', 40, '87210345061', '56521', 'drkoszegidora', 'BK0vRdfH'),
-(5, 'Dr. Gergely János', '36209812165', 'drgergelyjanos101@gmail.com', 5600, 'Békéscsaba', 'Hunyadi', 'utca', 14, '87438153191', '52711', 'drgergelyjanos', 'cV7FVhJk');
+INSERT INTO `orvosok` (`id`, `nev`, `telefonszam`, `email`, `iranyitoszam`, `helysegnev`, `teruletnev`, `terulettipus`, `hazszam`, `adoszam`, `azonositoszam`, `felhasznalonev`, `jelszo`, `status`) VALUES
+(1, 'Dr. Kiss Péterke', '36703458762', 'drkisspeter3452@gmail.com', 5600, 'Békéscsaba', 'Szőlő', 'utca', 2, '87629818720', '73543', 'drkisspeter', '7tHifiTV', 'aktiv'),
+(2, 'Belacskam', '65432132', 'jddjfoj@oisdhf.com', 5600, 'Csaba', 'utca', 'Varos', 5600, '6543213215', '65321312', 'rivkuser.erxycf', 'LmHc5Ma', 'aktiv'),
+(3, 'Dr. Kutasi Kitti', '36206239852', 'drkutasikitti55@gmail.com', 5600, 'Békéscsaba', 'Ady Endre', 'utca', 10, '82613452910', '74356', 'drkutasikitti', 'MY8CWcxg', 'aktiv'),
+(4, 'Dr. Kőszegi Dórikaaa', '36703248567', 'drkoszegidora2310@gmail.com', 5600, 'Békéscsaba', 'Kölcsey Ferenc', 'utca', 40, '87210345061', '56521', 'drkoszegidora', 'BK0vRdfH', 'aktiv'),
+(5, 'Dr. Gergely János', '36209812165', 'drgergelyjanos101@gmail.com', 6545, 'Békéscsaba', 'Hunyadi', 'utca', 14, '87438153191', '52711', 'drgergelyjanos', 'cV7FVhJk', 'aktiv');
 
 -- --------------------------------------------------------
 
@@ -283,6 +292,7 @@ INSERT INTO `orvosok` (`id`, `nev`, `telefonszam`, `email`, `iranyitoszam`, `hel
 -- Tábla szerkezet ehhez a táblához `vizsgalatok`
 --
 
+DROP TABLE IF EXISTS `vizsgalatok`;
 CREATE TABLE `vizsgalatok` (
   `id` int(11) NOT NULL,
   `alt_id` int(11) NOT NULL,
@@ -302,8 +312,7 @@ INSERT INTO `vizsgalatok` (`id`, `alt_id`, `ovs_id`, `beviteloka`, `megjegyzes`,
 (2, 2, 2, 'Harapásból eredő seb', 'A kutya sebét a nyakánál lekezeltük Canosept-el, majd kitisztítottuk, ezek után pedig bekötöztük. A seb nincs elfertőződve. A kutya védőgallért kapott amíg a seb be nem gyógyul.', NULL, 20),
 (3, 3, 3, 'Fül üszkösödése', 'A cica füle üszkösödésnek indult. Az elhalt részt levágtuk, majd összevartuk. A cicát már csak varratszedésre kell visszahozni. Védőgallért adtunk.', '2024-03-01', 50),
 (4, 4, 4, 'Oltás', 'A kutyát oltásra hozta a gazdája. Megkapta a veszettség elleni kombinált oltást.', NULL, 10),
-(5, 5, 5, 'RHD oltás', 'A nyuszit oltásra hozta a gazdája. Myxomatosis, RHD elleni védőoltást megkapta', NULL, 10),
-(6, 6, 1, 'Állatútlevél', 'A kutyát állatútlevél igénylésére hozták be', NULL, 20);
+(5, 5, 5, 'RHD oltás', 'A nyuszit oltásra hozta a gazdája. Myxomatosis, RHD elleni védőoltást megkapta', NULL, 10);
 
 --
 -- Indexek a kiírt táblákhoz
@@ -364,19 +373,25 @@ ALTER TABLE `vizsgalatok`
 -- AUTO_INCREMENT a táblához `allatok`
 --
 ALTER TABLE `allatok`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT a táblához `gazdak`
 --
 ALTER TABLE `gazdak`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+
+--
+-- AUTO_INCREMENT a táblához `orvosok`
+--
+ALTER TABLE `orvosok`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT a táblához `vizsgalatok`
 --
 ALTER TABLE `vizsgalatok`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- Megkötések a kiírt táblákhoz
