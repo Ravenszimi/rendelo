@@ -1,11 +1,12 @@
 import Logo from '../assets/Logo_hatternelkul.png';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import toast from 'react-hot-toast';
+import RendeloContext from '../context/RendeloContext';
 
 //Gazda adatai
 function NewPatient2() {
-  const {state} = useLocation();
+  const {setRefreshPaciensek} = useContext(RendeloContext);
   const [formData, setFormData] = useState({
     gda_id: localStorage.getItem('id'),
     nev: "",
@@ -41,6 +42,7 @@ function NewPatient2() {
     if(data.message){
       toast.success(data.message);
       localStorage.setItem('alt_id',data.allatId);
+      setRefreshPaciensek(prev => !prev);
       navigate('/ujpaciens3', {
         state: {
           allatId: data.allatId
@@ -50,7 +52,7 @@ function NewPatient2() {
   }
 
   return (
-    <div className="flex bg-cover bg-[#E5CFF7]">
+    <div className="min-h-screen flex bg-cover bg-[#E5CFF7]">
 <div className="w-full max-w-lg m-auto bg-white rounded p-5 border-2 border-[#713ABE]">   
       <header>
         <img className="object-contain h-40 w-96 mx-auto mb-5" src={Logo} alt="logo" />

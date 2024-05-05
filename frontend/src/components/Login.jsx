@@ -10,7 +10,7 @@ function Login() {
     jelszo: "",
   });
 
-  const {setLoggedIn} = useContext(OrvosContext);
+  const {setToken} = useContext(OrvosContext);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
@@ -38,7 +38,7 @@ function Login() {
     } else {
       toast.success(data.message);
       localStorage.setItem("usertoken", data.token);
-      setLoggedIn(true);
+      setToken(data.token);
       navigate("/");
     }
   };
@@ -88,12 +88,6 @@ function Login() {
           </div>
         </form>
         <footer>
-          <Link
-            to={"/forgotpassword"}
-            className="text-[#713ABE] hover:text-[#5B0888] text-sm float-left"
-          >
-            Elfelejtett jelszó?
-          </Link>
           <Link
             to={"/register"}
             className="text-[#713ABE] hover:text-[#5B0888] text-sm float-right"

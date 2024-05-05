@@ -1,9 +1,12 @@
 import Logo from '../assets/Logo_hatternelkul.png';
-import {Link} from 'react-router-dom';
-import { useState } from 'react';
+import {Link, useNavigate} from 'react-router-dom';
+import { useContext, useState } from 'react';
 import toast from 'react-hot-toast';
+import RendeloContext from '../context/RendeloContext';
 
 function Register() {
+  const {setRefreshOrvosok} = useContext(RendeloContext);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     nev: "",
     telefonszam: "",
@@ -48,8 +51,11 @@ function Register() {
     }
     delete formData.jelszo2;
     const data = await saveData(formData);
+    setRefreshOrvosok(prev => !prev);
     if (data.message.includes("Új")) {
       toast.success(data.message);
+      navigate("/");
+    
     } else {
       toast.error(data.message);
     }

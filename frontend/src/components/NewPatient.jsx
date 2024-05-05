@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 
 //Gazda adatai
 function NewPatient() {
-
+  const {setRefreshGazdak} = useContext(RendeloContext);
   const [formData, setFormData] = useState({
     nev: "",
     telefonszam: "",
@@ -44,6 +44,7 @@ function NewPatient() {
       let id = data.id;
       console.log(id)
       localStorage.setItem('id', id);
+      setRefreshGazdak(prev => !prev);
       navigate('/ujpaciens2', {
         state: {
           gazdaId: id

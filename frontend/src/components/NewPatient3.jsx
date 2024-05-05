@@ -7,7 +7,6 @@ import Select from 'react-select';
 
 //Gazda adatai
 function NewPatient3() {
-  const {state} = useLocation();
   const {orvosok, kezelesarak} = useContext(RendeloContext);
   const [formData, setFormData] = useState({
     alt_id:  localStorage.getItem('alt_id'),
@@ -19,14 +18,22 @@ function NewPatient3() {
   });
 
   const kezelesArak = kezelesarak.map(kezelesar => {
-    return {value: kezelesar.id, label: kezelesar.nev};
+    return {value: kezelesar.id, label: kezelesar.nev, ar: kezelesar.ar};
   });
   const [selectedOptions, setSelectedOptions] = useState(null);
+  const handleSelectChange = (selectedOptionsArray) => {
+    setSelectedOptions(selectedOptionsArray);
+    const osszegMezo = document.querySelector('#osszeg');
+    let osszeg = 0;
+    selectedOptionsArray.forEach((option) =>  {
+      osszeg += option.ar;
+    });
+    osszegMezo.value = osszeg + " Ft";
+  }
 
   const navigate = useNavigate();
   
   const handleChange = (e) => {
-    console.log(e.target.value)
     setFormData((prev) => ({...prev, [e.target.id] : e.target.value}));
   }
 
@@ -44,9 +51,7 @@ function NewPatient3() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    console.log(selectedOptions);
     formData.kezelesek = selectedOptions;
-    console.log(formData);
     const data = await saveData(formData);
     if(data.message){
         toast.success(data.message);
@@ -56,7 +61,7 @@ function NewPatient3() {
     }
   }
   return (
-    <div className="flex bg-cover bg-[#E5CFF7]">
+    <div className="min-h-screen flex bg-cover bg-[#E5CFF7]">
 <div className="w-full max-w-lg m-auto bg-white rounded p-5 border-2 border-[#713ABE]">   
       <header>
         <img className="object-contain h-40 w-96 mx-auto mb-5" src={Logo} alt="logo" />
@@ -98,19 +103,20 @@ function NewPatient3() {
         <div class="mb-4">
             <label for="message" class="block mb-2 text-[#713ABE] font-medium ">Felírt kezelések</label>
             <Select
-            placeholder={"Válasszon kezelést"}
+              id='select'
+              placeholder={"Válasszon kezelést"}
                closeMenuOnSelect={false}
                isClearable
                isSearchable
                isMulti
                options={kezelesArak}
-               onChange={setSelectedOptions}
+               onChange={handleSelectChange}
             />
         </div>
 
         <div>
             <label className="block mb-2 text-[#713ABE]">Fizetendő összeg</label>
-            <input className="w-full p-2 mb-6 text-[#713ABE] border-b-2 border-[#713ABE] outline-none focus:bg-gray-300" type="text" name="osszeg"/>
+            <input className="w-full p-2 mb-6 text-[#713ABE] border-b-2 border-[#713ABE] outline-none focus:bg-gray-300" type="text" id="osszeg" disabled/>
         </div>
         <div>          
           <button onClick={onSubmit} type='submit' className="w-32 bg-[#713ABE] hover:bg-[#5B0888] text-white font-bold py-2 px-4 mb-6 rounded text-center float-right" >Mentés</button>

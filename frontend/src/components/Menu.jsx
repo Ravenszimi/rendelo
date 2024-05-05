@@ -4,8 +4,12 @@ import { useContext, useEffect } from "react";
 import OrvosContext from "../context/OrvosContext";
 
 function Menu() {
-  const { loggedIn, logout } = useContext(OrvosContext);
+  const { logout } = useContext(OrvosContext);
   const navigate = useNavigate();
+  const {token} = useContext(OrvosContext);
+  useEffect(() => {
+
+  }, [token]);
   const navItems = {
     loggedIn: [
       {
@@ -54,7 +58,8 @@ function Menu() {
           </span>
         </Link>
         <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-          {!loggedIn ? (
+          { !token ? (
+            <>
             <Link to={"/login"}>
               <button
                 type="button"
@@ -62,7 +67,9 @@ function Menu() {
               >
                 Bejelentkezés
               </button>
+              
             </Link>
+            </>
           ) : (
               <button
                 onClick={() => {
@@ -106,7 +113,7 @@ function Menu() {
           id="navbar-sticky"
         >
           <ul className="flex flex-col bg-[#E5CFF7] p-4 md:p-0 mt-4 font-medium  bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-[#9D76C1] dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-            {!loggedIn
+            {token
               ? navItems.loggedIn.map((navitem) => (
                   <Link
                     to={navitem.path}
