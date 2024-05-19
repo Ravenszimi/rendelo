@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Logo from '../assets/Logo_hatternelkul.png';
 import {Link, useNavigate} from 'react-router-dom';
 import toast from 'react-hot-toast';
+import RendeloContext from '../context/RendeloContext';
 
 //Gazda adatai
 function NewPatient() {
